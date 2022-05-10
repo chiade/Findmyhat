@@ -1,0 +1,18 @@
+{
+  "name": "findmyhat",
+  "version": "1.0.0",
+  "description": "Javascript Assessment",
+  "main": "index.js",
+  "scripts": {
+    "main": "node main.js",
+    "main1": "node main1.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Desmond Chia",
+  "license": "ISC",
+  "dependencies": {
+    "clear-screen": "^1.0.0",
+    "prompt-sync": "^4.2.0",
+    "table": "^6.8.0"
+  }
+}
