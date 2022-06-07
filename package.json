@@ -6,6 +6,9 @@
   "scripts": {
     "main": "node main.js",
     "main1": "node main1.js",
+    "main2": "node main2.js",
+    "main3": "node main3.js",
+    "main4": "node main4.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Desmond Chia",
@@ -13,6 +16,7 @@
   "dependencies": {
     "clear-screen": "^1.0.0",
     "prompt-sync": "^4.2.0",
-    "table": "^6.8.0"
+    "table": "^6.8.0",
+    "lodash": "4.17.21"
   }
 }

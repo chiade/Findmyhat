@@ -1,7 +1,7 @@
 //import all required modules
 const prompt = require('prompt-sync')({sigint: true});
 const clear = require('clear-screen');
-
+const _ = require('lodash');
 //Instantiate variable
 //can edit or create new variables if needed
 
@@ -23,48 +23,44 @@ let Key = "";
 class Field 
 {
     field = [];
+    locationX = 0;
+    locationY = 0;
 
     constructor()
     {
         //the current location of the character *
-        //character * can be always at teh default position (0,0)
-        this.locationX = 0;
-        this.locationY = 0;
-
-            for (let a = 0; a < row; a++)
-            {
-                this.field[a] = [];
-            }
-
-            this.generateField(); //generate patches of grass in the plot
+        //character * can be always at teh default position (0,0)    
+        for(let a = 0; a < col; a++){
+            this.field[a] = []
+        }
+        this.generateField(); //generate patches of grass in the plot
     }
 //end of field class
 
 generateField() 
 {
-    for (let y = 0; y < row; y++)
+    for (let x = 0; x < row; x++)
     {
-        for(let x = 0; x < col; x++) 
+        for(let y = 0; y < col; y++) 
         {
         //const prob = Math.random();
-        this.field[y][x] = fieldCharacter;
+        this.field[x][y] = fieldCharacter;
         }
     }
     this.generateHole(); //generate many holes randomly
-    this.generatePath(); //generate a my path from origin
     this.generateHat(); //generate a hat randomly
  } //console.log(this.field);
 
  generateHole() 
  {
-    for (let yy = 0; yy < row; yy++)
+    for (let xx = 0; xx < row; xx++)
     {
-        for(let xx = 0; xx < col; xx++) 
+        for(let yy = 0; yy < col; yy++) 
         {
         //const prob = Math.random();
-        yy = Math.floor(Math.random() * row); // between 0-9
-        xx = Math.floor(Math.random() * col); 
-        this.field[yy][xx] = hole;
+        xx = Math.floor(Math.random() * row); // between 0-9
+        yy = Math.floor(Math.random() * col); 
+        this.field[xx][yy] = hole;
         }
     }
 }
@@ -72,90 +68,95 @@ generateField()
 
 generateHat() 
 {
-    let yyyy = 0, xxxx = 0;
-    if (this.field[yyyy][xxxx] != pathCharacter || this.field[yyyy][xxxx] != hole) 
+    let xxx = 0, yyy = 0;
+    if (this.field[xxx][yyy] != pathCharacter || this.field[xxx][yyy] != hole) 
     {
-    //for (let yyyy = 0; yyyy < row; yyyy++)
-    //{
-        //for(let xxxx = 0; xxxx < col; xxxx++) 
-        {
-        //const prob = Math.random();
-        yyyy = Math.floor(Math.random() * row); // between 0-9
-        xxxx = Math.floor(Math.random() * col); 
-        this.field[yyyy][xxxx] = hat;
-        }
+        xxx = Math.floor(Math.random() * row); // between 0-9
+        yyy = Math.floor(Math.random() * col); 
+        this.field[xxx][yyy] = hat;
+
     }
 }
 
-generatePath() 
+checkNewPosition(x, y) 
 {
- 
-   this.field[this.locationY][this.locationX] = pathCharacter;
-
-   //this.runGame();
-}
-
-differentScenario() 
-{
-    if (this.field[this.locationY][this.locationX] == hole)
+    if (this.field[x][y] == hole)
     {
         console.log("Sorry, you fell down a hole!");
+        return false;
     }
-    else if (this.field[this.locationY][this.locationX] == hat)
+    else if (this.field[x][y] == hat)
     {
         console.log("Congrats, you found your hat!");
+        return false;
     }
-    else if (this.locationY < 0 || this.locationY > row || this.locationX < 0 || this.locationX > col)
+    else if (x < 0 || x > row || y < 0 || y > col)
     {
         console.log("Out of bounds - Game End!");
+        return false;
     }
+    return true;
 }
 
 runGame()
 {
-        //Implement your codes
-        
-        if (Key == "u" && this.field[this.locationY][this.locationX] != hat && this.field[this.locationY][this.locationX] != hole)
+        //Implement your codes        
+        console.log("Current Character location is ", this.locationX, this.locationY);
+
+        if (Key == "u")
         {
-            this.field[this.locationY+1][this.locationX] = pathCharacter;
-            {
-                this.differentScenario();
+           const targetX = this.locationX - 1;
+            if (this.checkNewPosition(targetX, this.locationY)){
+                this.locationX = targetX;
+            }
+            else {
+                return;
             }
         }
         
-        else if (Key == "d" && this.field[this.locationY][this.locationX] != hat && this.field[this.locationY][this.locationX] != hole)
+        else if (Key == "d")
         {
-            this.field[this.locationY-1][this.locationX] = pathCharacter;
-            {
-                this.differentScenario();
+            const targetX = this.locationX + 1;
+            if(this.checkNewPosition(targetX, this.locationY)){
+                this.locationX = targetX;
+            }
+            else {
+                return;
             }
         }
-        else if (Key == "l" && this.field[this.locationY][this.locationX] != hat && this.field[this.locationY][this.locationX] != hole)
+        else if (Key == "l" )
         {
-            this.field[this.locationY][this.locationX-1] = pathCharacter;
-            {
-                this.differentScenario();
+            const targetY = this.locationY - 1;
+            if(this.checkNewPosition(this.locationX, targetY)){
+                this.locationY = targetY;
+            }
+            else {
+                return;
             }
         }
-        else if (Key == "r" && this.field[this.locationY][this.locationX] != hat && this.field[this.locationY][this.locationX] != hole)
-        {
-            this.field[this.locationY][this.locationX+1] = pathCharacter;
-            {
-                this.differentScenario();
+        else if (Key == "r")
+        {   
+            const targetY = this.locationY + 1
+            if(this.checkNewPosition(this.locationX, targetY)){
+                this.locationY = targetY;
+            }
+            else {
+                return;
             }
         }
-        else
-        {
-            console.log("Invalid key. Enter again (u, d, l or r)");
-        }
-        //this.differentScenario();
+        
+        console.log("New Character location is ", this.locationX, this.locationY);
+
         this.print();
         this.askQuestion();
 }
 
 print() 
-{
-        clear();
+{       
+        const fieldCopy = _.cloneDeep(this.field)
+        fieldCopy[this.locationX][this.locationY] = pathCharacter;        
+        //this.field[this.locationX][this.locationY] = pathCharacter;        
+
         const displayString = this.field.map(row => {
             return row.join('');
         }).join('\n');
@@ -164,10 +165,12 @@ print()
 
 askQuestion()
 {
-        const answer = prompt('Which way? (u, d, l, r)').toUpperCase();
-       
-        if (answer == 'u' || answer == 'd' || answer == 'l' || answer == 'r')
+        const answer = prompt('Which way? (u, d, l, r)').toLowerCase();
+        
+
+        if (answer == 'u' || answer == 'd' || answer == 'l' || answer == 'r')        
         {
+            Key = answer
             this.runGame();
         }
         else
@@ -177,7 +180,6 @@ askQuestion()
     }
 }// end of field class
 
-//create an instance object for the field
 const myField = new Field();
 myField.runGame();
 
